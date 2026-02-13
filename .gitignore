@@ -1,0 +1,17 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Claude
+.claude/
+
+# Misc
+cuda-keyring_1.0-1_all.deb
+temp_audio.wav

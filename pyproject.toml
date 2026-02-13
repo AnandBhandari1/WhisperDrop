@@ -1,0 +1,23 @@
+[project]
+name = "fast-stt"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "faster-whisper",
+    "customtkinter",
+    "sounddevice",
+    "pyaudio",
+    "torch",
+    "keyboard",
+    "pyautogui",
+    "psutil",
+    "language-tool-python",
+    "python-xlib",
+    "librosa",
+    "soundfile",
+    "pynput",
+    "matplotlib",
+    "numpy",
+]
