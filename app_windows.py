@@ -1,4 +1,10 @@
 import sys
+import argparse
+
+if sys.platform != "win32":
+    print("This is the Windows version. Use app.py on Linux.")
+    sys.exit(1)
+
 import customtkinter as ctk
 import sounddevice as sd
 from faster_whisper import WhisperModel
@@ -6,20 +12,21 @@ import threading
 import numpy as np
 import torch
 import time
-import subprocess
+import pyautogui
+import pyperclip
 from pynput import keyboard
-
-if sys.platform != "linux":
-    print("WhisperDrop requires Linux (X11). Windows and macOS are not supported.")
-    sys.exit(1)
 from pynput.keyboard import Key
 from collections import deque
 import random
 
-class SimpleApp(ctk.CTk):
-    def __init__(self):
-        super().__init__()
+pyautogui.FAILSAFE = False
+pyautogui.PAUSE = 0
 
+
+class SimpleApp(ctk.CTk):
+    def __init__(self, force_device=None):
+        super().__init__()
+        self.force_device = force_device
         self.title("WhisperDrop")
         self.geometry("160x210")
         self.attributes('-topmost', True)
@@ -220,21 +227,28 @@ class SimpleApp(ctk.CTk):
     
     def load_model(self):
         try:
-            print(f"Loading model: {self.model_name}")
+            print(f"Loading model: {self.model_name} (device: {self.force_device or 'auto'})")
             self.after(0, lambda: self.status_label.configure(text="Loading model..."))
             
-            try:
-                device = "cuda"
-                compute_type = "float16"
-                self.model = WhisperModel(self.model_name, device=device, compute_type=compute_type)
-                self.device_used = "CUDA"
-                print(f"Using CUDA with {self.model_name}")
-            except:
+            if self.force_device == "cpu":
                 device = "cpu"
                 compute_type = "int8"
                 self.model = WhisperModel(self.model_name, device=device, compute_type=compute_type)
                 self.device_used = "CPU"
                 print(f"Using CPU with {self.model_name}")
+            else:
+                try:
+                    device = "cuda"
+                    compute_type = "float16"
+                    self.model = WhisperModel(self.model_name, device=device, compute_type=compute_type)
+                    self.device_used = "CUDA"
+                    print(f"Using CUDA with {self.model_name}")
+                except Exception:
+                    device = "cpu"
+                    compute_type = "int8"
+                    self.model = WhisperModel(self.model_name, device=device, compute_type=compute_type)
+                    self.device_used = "CPU"
+                    print(f"CUDA failed, using CPU with {self.model_name}")
             
             self.after(0, lambda: self.status_label.configure(text=f"Ready • {self.device_used}", text_color="#606060"))
             
@@ -343,10 +357,9 @@ class SimpleApp(ctk.CTk):
     
     def insert_text(self, text):
         try:
-            subprocess.run(
-                ['xdotool', 'type', '--clearmodifiers', '--delay', '0', text + ' '],
-                timeout=5
-            )
+            time.sleep(0.3)
+            pyperclip.copy(text + ' ')
+            pyautogui.hotkey('ctrl', 'v')
 
             self.status_label.configure(text="Inserted!", text_color="#3a7a5a")
             print(f"✅ Inserted: {text}")
@@ -374,6 +387,17 @@ class SimpleApp(ctk.CTk):
 
 
 if __name__ == "__main__":
-    app = SimpleApp()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cpu", action="store_true")
+    parser.add_argument("--cuda", action="store_true")
+    args = parser.parse_args()
+    
+    force_device = None
+    if args.cpu:
+        force_device = "cpu"
+    elif args.cuda:
+        force_device = "cuda"
+    
+    app = SimpleApp(force_device=force_device)
     app.protocol("WM_DELETE_WINDOW", app.on_closing)
     app.mainloop()

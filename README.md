@@ -2,7 +2,7 @@
 
 Speak. Drop. Done.
 
-WhisperDrop is a tiny, fast speech-to-text tool for Linux **only**. It sits as a dark floating widget on your screen -- press F8 anywhere, speak, and your words drop right at the cursor with grammar correction. No copy-paste, no switching windows, no hassle. **Windows and macOS are not supported.**
+WhisperDrop is a tiny, fast speech-to-text tool for **Linux and Windows**. It sits as a dark floating widget on your screen -- press F8 anywhere, speak, and your words drop right at the cursor. No copy-paste, no switching windows, no hassle. **macOS is not supported.**
 
 ## How It Works
 
@@ -13,8 +13,7 @@ WhisperDrop is a tiny, fast speech-to-text tool for Linux **only**. It sits as a
 
 ## Features
 
-- **Instant text drop** -- words appear at your cursor via `xdotool`, no clipboard hijacking
-- **Grammar correction** -- auto-fixes grammar using LanguageTool
+- **Instant text drop** -- words appear at your cursor via `xdotool` (Linux) or clipboard paste (Windows)
 - **GPU accelerated** -- CUDA with automatic CPU fallback
 - **Global hotkey** -- F8 works from any application, no sudo needed
 - **Compact dark UI** -- frameless floating widget, draggable, always on top
@@ -24,8 +23,9 @@ WhisperDrop is a tiny, fast speech-to-text tool for Linux **only**. It sits as a
 ## Requirements
 
 - Python 3.12+
-- **Linux (X11) only** — Windows and macOS are not supported
-- `xdotool` installed
+- **Linux (X11)** or **Windows** — macOS is not supported
+- **Linux:** `xdotool` installed
+- **Windows:** No extra system deps
 - CUDA GPU (optional, falls back to CPU)
 
 ## Install
@@ -35,10 +35,11 @@ git clone https://github.com/AnandBhandari1/WhisperDrop.git
 cd WhisperDrop
 
 # Install uv if you don't have it
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# Linux: curl -LsSf https://astral.sh/uv/install.sh | sh
+# Windows: https://astral.sh/uv
 
-# Install system dependencies
-sudo apt install xdotool
+# Linux only: install xdotool
+# sudo apt install xdotool
 
 # Install python dependencies
 uv sync
@@ -46,16 +47,30 @@ uv sync
 
 ## Run
 
+**Linux:**
 ```bash
 ./run.sh
+```
+
+**Windows (CPU only):**
+```batch
+run_cpu.bat
+```
+
+**Windows (CUDA GPU):**
+```batch
+run_cuda.bat
 ```
 
 ## Project Structure
 
 ```
 WhisperDrop/
-├── app.py             # Application
-├── run.sh             # Run script
+├── app.py             # Linux application (xdotool)
+├── app_windows.py     # Windows application (pyautogui)
+├── run.sh             # Linux run script
+├── run_cpu.bat        # Windows CPU run script
+├── run_cuda.bat       # Windows CUDA run script
 ├── pyproject.toml     # Dependencies
 ├── uv.lock            # Lock file
 ├── LICENSE            # MIT License
@@ -70,9 +85,11 @@ WhisperDrop/
 
 **F8 not responding** -- Make sure no other app is capturing F8. The hotkey uses `pynput` and works without sudo.
 
-**Text not inserting** -- Ensure `xdotool` is installed (`sudo apt install xdotool`). Only works on X11, not Wayland.
+**Text not inserting (Linux)** -- Ensure `xdotool` is installed (`sudo apt install xdotool`). Only works on X11, not Wayland.
 
-**Running on Windows/macOS** -- WhisperDrop is Linux-only. The app will exit with an error on other platforms.
+**Text not inserting (Windows)** -- Ensure the target window is focused before transcription finishes. The app uses Ctrl+V to paste.
+
+**Running on macOS** -- WhisperDrop does not support macOS. Use Linux or Windows.
 
 ## License
 

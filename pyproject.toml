@@ -12,11 +12,12 @@ dependencies = [
     "torch",
     "keyboard",
     "psutil",
-    "language-tool-python",
     "python-xlib",
     "librosa",
     "soundfile",
     "pynput",
+    "pyautogui",
+    "pyperclip",
     "matplotlib",
     "numpy",
 ]
