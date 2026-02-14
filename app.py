@@ -1,3 +1,4 @@
+import sys
 import customtkinter as ctk
 import sounddevice as sd
 from faster_whisper import WhisperModel
@@ -8,6 +9,10 @@ import time
 import language_tool_python
 import subprocess
 from pynput import keyboard
+
+if sys.platform != "linux":
+    print("WhisperDrop requires Linux (X11). Windows and macOS are not supported.")
+    sys.exit(1)
 from pynput.keyboard import Key
 from collections import deque
 import random
@@ -427,7 +432,7 @@ class SimpleApp(ctk.CTk):
     def insert_text(self, text):
         """Insert text at cursor using xdotool (fast and reliable)"""
         try:
-            # xdotool type with no delay - much faster than pyautogui char-by-char
+            # xdotool type with no delay
             subprocess.run(
                 ['xdotool', 'type', '--clearmodifiers', '--delay', '0', text + ' '],
                 timeout=5

@@ -2,7 +2,7 @@
 
 Speak. Drop. Done.
 
-WhisperDrop is a tiny, fast speech-to-text tool for Linux. It sits as a dark floating widget on your screen -- press F8 anywhere, speak, and your words drop right at the cursor with grammar correction. No copy-paste, no switching windows, no hassle.
+WhisperDrop is a tiny, fast speech-to-text tool for Linux **only**. It sits as a dark floating widget on your screen -- press F8 anywhere, speak, and your words drop right at the cursor with grammar correction. No copy-paste, no switching windows, no hassle. **Windows and macOS are not supported.**
 
 ## How It Works
 
@@ -24,7 +24,7 @@ WhisperDrop is a tiny, fast speech-to-text tool for Linux. It sits as a dark flo
 ## Requirements
 
 - Python 3.12+
-- Linux (X11)
+- **Linux (X11) only** — Windows and macOS are not supported
 - `xdotool` installed
 - CUDA GPU (optional, falls back to CPU)
 
@@ -71,6 +71,8 @@ WhisperDrop/
 **F8 not responding** -- Make sure no other app is capturing F8. The hotkey uses `pynput` and works without sudo.
 
 **Text not inserting** -- Ensure `xdotool` is installed (`sudo apt install xdotool`). Only works on X11, not Wayland.
+
+**Running on Windows/macOS** -- WhisperDrop is Linux-only. The app will exit with an error on other platforms.
 
 ## License
 
