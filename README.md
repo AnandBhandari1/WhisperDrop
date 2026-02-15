@@ -4,6 +4,8 @@ Speak. Drop. Done.
 
 WhisperDrop is a tiny, fast speech-to-text tool for **Linux and Windows**. It sits as a dark floating widget on your screen -- press F8 anywhere, speak, and your words drop right at the cursor. No copy-paste, no switching windows, no hassle. **macOS is not supported.**
 
+<a href="https://www.buymeacoffee.com/anandbhandari" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-red.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 ## How It Works
 
 1. Press **F8** (or click **REC**)
